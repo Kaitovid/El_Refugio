@@ -67,11 +67,28 @@ app.post('/api/seed', async (req: Request, res: Response) => {
         [adminHash]
       );
     }
-    res.json({ message: 'Auth seeded' });
+    const adminId = (await pool.query("SELECT id FROM users WHERE username = 'sysadmin'")).rows[0].id;
+    const groupsToSeed = [
+      { name: 'General', desc: 'Canal principal del equipo' },
+      { name: 'Diseño & UX', desc: 'Feedback, wireframes y assets' },
+      { name: 'Infraestructura', desc: 'Deploys, incidentes y monitoreo' },
+      { name: 'Producto', desc: 'Roadmap, sprints y prioridades' }
+    ];
+    for (const g of groupsToSeed) {
+      await pool.query(
+        'INSERT INTO groups (name, description, owner_id) VALUES ($1, $2, $3) ON CONFLICT (name) DO NOTHING',
+        [g.name, g.desc, adminId]
+      );
+    }
+    res.json({ message: 'Auth and Groups seeded successfully' });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Seeding failed' });
   }
+});
+
+app.post('/api/cleanup', async (req: Request, res: Response) => {
+  res.json({ message: 'ok' });
 });
 
 app.listen(port, () => console.log(`Auth service running on ${port}`));

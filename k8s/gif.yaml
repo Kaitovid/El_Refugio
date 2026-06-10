@@ -16,6 +16,7 @@ spec:
       - name: gif
         image: elrefugio-gif:latest
         imagePullPolicy: Never # Adjust when using a real registry
+        command: ["node", "dist/services/gif/index.js"]
         env:
         - name: GIF_PORT
           value: "5003"

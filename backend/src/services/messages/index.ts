@@ -89,4 +89,14 @@ app.post('/api/messages', upload.single('file'), async (req: Request, res: Respo
   }
 });
 
+app.get('/api/groups/:userId', async (req: Request, res: Response) => {
+  try {
+    const groups = await pool.query("SELECT * FROM groups WHERE deleted_at IS NULL");
+    res.json(groups.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error fetching groups' });
+  }
+});
+
 server.listen(port, () => console.log(`Messages service running on ${port}`));

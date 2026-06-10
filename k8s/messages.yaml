@@ -16,6 +16,7 @@ spec:
       - name: messages
         image: elrefugio-messages:latest
         imagePullPolicy: Never # Adjust when using a real registry
+        command: ["node", "dist/services/messages/index.js"]
         env:
         - name: MESSAGE_PORT
           value: "5002"

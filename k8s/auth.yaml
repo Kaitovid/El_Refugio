@@ -16,6 +16,7 @@ spec:
       - name: auth
         image: elrefugio-auth:latest
         imagePullPolicy: Never # Adjust when using a real registry
+        command: ["node", "dist/services/auth/index.js"]
         env:
         - name: AUTH_PORT
           value: "5001"
