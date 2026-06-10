@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: messages
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: messages
+  template:
+    metadata:
+      labels:
+        app: messages
+    spec:
+      containers:
+      - name: messages
+        image: elrefugio-messages:latest
+        imagePullPolicy: Never # Adjust when using a real registry
+        env:
+        - name: MESSAGE_PORT
+          value: "5002"
+        - name: DATABASE_URL
+          value: "postgresql://elrefugio:password@postgres:5432/elrefugio"
+        ports:
+        - containerPort: 5002
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: messages
+spec:
+  selector:
+    app: messages
+  ports:
+    - protocol: TCP
+      port: 5002
+      targetPort: 5002

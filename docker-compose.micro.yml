@@ -43,5 +43,17 @@ services:
     depends_on:
       - postgres
 
+  gif:
+    build: ./backend
+    container_name: elrefugio-gif
+    env_file:
+      - ./backend/.env_micro
+    environment:
+      - GIF_PORT=5003
+      - GIPHY_API_KEY=0F7GPQyRtxvMtAm7kCxCZKnUYe30mjnL
+    command: node dist/services/gif/index.js
+    ports:
+      - "5003:5003"
+
 volumes:
   db-data:

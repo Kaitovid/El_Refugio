@@ -57,7 +57,7 @@ app.post('/api/messages', upload.single('file'), async (req: Request, res: Respo
   const group_id = req.body.group_id;
   const sender_id = req.body.sender_id;
   let messageContent = req.body.content || '';
-  let messageType = 'text';
+  let messageType = req.body.message_type || 'text';
 
   if (req.file) {
     messageType = 'file';

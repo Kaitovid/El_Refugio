@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gif
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gif
+  template:
+    metadata:
+      labels:
+        app: gif
+    spec:
+      containers:
+      - name: gif
+        image: elrefugio-gif:latest
+        imagePullPolicy: Never # Adjust when using a real registry
+        env:
+        - name: GIF_PORT
+          value: "5003"
+        - name: GIPHY_API_KEY
+          value: "0F7GPQyRtxvMtAm7kCxCZKnUYe30mjnL"
+        ports:
+        - containerPort: 5003
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gif
+spec:
+  selector:
+    app: gif
+  ports:
+    - protocol: TCP
+      port: 5003
+      targetPort: 5003

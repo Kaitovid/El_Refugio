@@ -168,7 +168,7 @@ app.post('/api/messages', upload.single('file'), async (req: Request, res: Respo
   const group_id = req.body.group_id;
   const sender_id = req.body.sender_id;
   let messageContent = req.body.content || '';
-  let messageType = 'text';
+  let messageType = req.body.message_type || 'text';
 
   if (req.file) {
     messageType = 'file';
@@ -226,6 +226,31 @@ app.post('/api/seed', async (req: Request, res: Response) => {
     res.json({ message: 'Database seeded successfully' });
   } catch (err) {
     res.status(500).json({ error: 'Seeding failed' });
+  }
+});
+
+app.get('/api/gifs/trending', async (req, res) => {
+  const GIPHY_API_KEY = process.env.GIPHY_API_KEY || '0F7GPQyRtxvMtAm7kCxCZKnUYe30mjnL';
+  const url = `https://api.giphy.com/v1/gifs/trending?api_key=${GIPHY_API_KEY}&limit=10`;
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch gifs' });
+  }
+});
+
+app.get('/api/gifs/search', async (req, res) => {
+  const GIPHY_API_KEY = process.env.GIPHY_API_KEY || '0F7GPQyRtxvMtAm7kCxCZKnUYe30mjnL';
+  const q = req.query.q as string;
+  const url = `https://api.giphy.com/v1/gifs/search?api_key=${GIPHY_API_KEY}&q=${encodeURIComponent(q)}&limit=10`;
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to search gifs' });
   }
 });
 
